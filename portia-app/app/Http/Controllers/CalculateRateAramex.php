@@ -30,10 +30,10 @@ class CalculateRateAramex extends Controller
             'payload.checkout.shipping.source.lng'=>'required',
             'payload.checkout.shipping.source.lat'=>'required',
 
-            // 'purchases.dimensions.weight.unit'=>'required',
-            // 'purchases.dimensions.weight.value'=>'required',
+            'purchases.*.dimensions.weight.unit'=>'required',
+            'purchases.*.dimensions.weight.value'=>'required',
 
-            // 'purchases.quantity'=>'required',
+            'purchases.*.quantity'=>'required',
         ]);
 
         // dd(request()['name']);
@@ -43,7 +43,6 @@ class CalculateRateAramex extends Controller
              $weight += $purchase['dimensions']['weight']['value'];
              $quantity += $purchase['quantity'];
              $unit = strToUpper($purchase['dimensions']['weight']['unit']);
-
             }
 
 

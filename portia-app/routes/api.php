@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CalculateRateAramex;
+use App\Http\Controllers\CreateChargeWaybillArmx;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/calculateRate' , [CalculateRateAramex::class , 'store']);
+Route::post('/calculate-rate' , [CalculateRateAramex::class , 'store']);
+
+Route::post('/charge-waybill' , [CreateChargeWaybillArmx::class , 'create']);
 
 // return Http::dd()->post('https://ws.dev.aramex.net/ShippingAPI.V2/RateCalculator/Service_1_0.svc/json/CalculateRate');
