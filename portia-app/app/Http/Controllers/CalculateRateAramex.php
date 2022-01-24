@@ -14,7 +14,7 @@ class CalculateRateAramex extends Controller
          $quantity = 0 ;
          $weight = 0 ;
          $unit = '';
-        // dd(request()->all());
+        
         request()->validate([
             'payload.checkout.shipping.destination.line1'=>'required',
             'payload.checkout.shipping.destination.city'=>'required',

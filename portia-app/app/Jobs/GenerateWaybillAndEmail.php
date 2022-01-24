@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\WaybillMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -9,6 +10,7 @@ use Illuminate\Log\Logger;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class GenerateWaybillAndEmail implements ShouldQueue
 {
@@ -35,7 +37,7 @@ class GenerateWaybillAndEmail implements ShouldQueue
     public function dateFormatter($date)
     {
 
-       
+
         $tz = 2 * 100;
         $tz = $tz > 0 ? '-' . $tz : '+' . $tz;
         return '/Date(' . (\Carbon\Carbon::parse($date)->timestamp) * 1000 . $tz . ')/';
@@ -199,9 +201,7 @@ class GenerateWaybillAndEmail implements ShouldQueue
             ],
         ]);
 
-        // Logger($dump);
-        // dd('\\/Date(' . date('UvO') . ")\\/");
-        // Logger($shipment->json("Shipments")[0]['ID']);
+    
 
         $pickupLabel = Http::post('https://ws.dev.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreatePickup', [
             "ClientInfo" => [
@@ -251,8 +251,8 @@ class GenerateWaybillAndEmail implements ShouldQueue
                     "Type" => "",
                 ],
                 "PickupLocation" => "test",
-                "PickupDate" => $this->dateFormatter(now()),
-                "ReadyTime" => $this->dateFormatter(now()->subMinutes(20)->addDay()),
+                "PickupDate" => $this->dateFormatter(now()->addDay()),
+                "ReadyTime" => $this->dateFormatter(now()),
                 "LastPickupTime" => $this->dateFormatter(now()->addDay()),
                 "ClosingTime" => $this->dateFormatter(now()->addDay()),
                 "Comments" => "",
@@ -338,10 +338,10 @@ class GenerateWaybillAndEmail implements ShouldQueue
                         ],
                         "ShippingDateTime" => $this->dateFormatter(now()),
                         "DueDate" => $this->dateFormatter(now()),
-                        "Comments" => "Comments ...",
-                        "PickupLocation" => "Reception",
-                        "OperationsInstructions" => "Fragile",
-                        "AccountingInstrcutions" => "Get us a discount please",
+                        "Comments" => "",
+                        "PickupLocation" => "",
+                        "OperationsInstructions" => "",
+                        "AccountingInstrcutions" => "",
                         "Details" => [
                             "Dimensions" => null,
                             "ActualWeight" => [
@@ -367,7 +367,7 @@ class GenerateWaybillAndEmail implements ShouldQueue
                             "DeliveryInstructions" => null,
                         ],
                         "Attachments" => [],
-                        "ForeignHAWB" => $shipment->json("Shipments")[0]['ID'], //$shipment->Shipments->ID
+                        "ForeignHAWB" => $shipment->json("Shipments")[0]['ID'],
                         "TransportType " => 0,
                         "PickupGUID" => null,
                         "Number" => "",
@@ -412,14 +412,10 @@ class GenerateWaybillAndEmail implements ShouldQueue
             ],
         ]);
 
-        Logger($pickupLabel);
 
 
-        // Mail::to($this->query['meta']['tenant']['owner']['email'])
-        //     ->queue(new WaybillMail($pickupLabel));
-
-        // dd($this->query);
-        // dd($pickupLabel);
+        Mail::to($this->query['meta']['tenant']['owner']['email'])
+            ->queue(new WaybillMail($pickupLabel->json('ProcessedPickup')['ProcessedShipments'][0]['ShipmentLabel']['LabelURL']));
 
     }
 }

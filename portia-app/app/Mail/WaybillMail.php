@@ -11,16 +11,16 @@ class WaybillMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $query;
+    public $label;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($query)
+    public function __construct($label)
     {
-            $this->query = $query;
+            $this->label = $label;
     }
 
     /**
