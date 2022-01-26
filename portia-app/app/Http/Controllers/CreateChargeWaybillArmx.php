@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AramexRequest;
 use App\Jobs\GenerateWaybillAndEmail;
+use App\Services\AramexDetails;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
