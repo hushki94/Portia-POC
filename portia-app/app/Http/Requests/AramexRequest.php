@@ -13,7 +13,7 @@ class AramexRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,31 +25,41 @@ class AramexRequest extends FormRequest
     {
         return [
             'meta.tenant.owner.email' => 'required|email',
+            'meta.tenant.name'=>'required',
             'payload.order.shipping_address.line1' => 'required|string|max:255',
             'payload.order.shipping_address.line2' => 'nullable|string|max:255',
             'payload.order.shipping_address.city' => 'required|string',
             'payload.order.shipping_address.country' => 'required|string',
-            'payload.order.shipments.0.source.lng' => 'nullable|string',
-            'payload.order.shipments.0.source.lat' => 'nullable|string',
+            'payload.order.shipping_address.lng' => 'required',
+            'payload.order.shipping_address.lat' => 'required',
             'payload.order.shipping_address.name' => 'nullable|string',
             'payload.order.shipping_address.telephone' => 'nullable|string',
+            'payload.order.shipping_address.email'=>'nullable|email',
             'payload.details.company_name' => 'required|string',
-            'payload.order.total.amount' => 'required|numeric',
+            'payload.order.total.amount' => 'required',
             'payload.order.payment_method' => 'required|string',
-            'payload.order.shipments.0.destination.line1' => 'required|string',
-            'payload.order.shipments.0.destination.line2' => 'nullable|string',
-            'payload.order.shipments.0.destination.city' => 'required|string',
-            'payload.order.shipments.0.destination.country' => 'required|string',
-            'payload.order.shipments.0.destination.lng' => 'nullable|string',
-            'payload.order.shipments.0.destination.lat' => 'nullable|string',
-            'payload.order.shipments.0.destination.name' => 'nullable|string',
-            'payload.order.shipments.0.destination.telephone' => 'nullable|string',
-            'payload.order.shipments.0.destination.email' => 'nullable|string',
+            'payload.order.billing_address.line1' => 'required|string',
+            'payload.order.billing_address.line2' => 'nullable|string',
+            'payload.order.billing_address.city' => 'required|string',
+            'payload.order.billing_address.country' => 'required|string',
+            'payload.order.billing_address.lng' => 'required',
+            'payload.order.billing_address.lat' => 'required',
+            'payload.order.billing_address.name' => 'nullable|string',
+            'payload.order.billing_address.telephone' => 'nullable|string',
+            'payload.order.billing_address.email' => 'nullable|email',
             'payload.details.goods_description' => 'required|string',
             'payload.details.country_of_origin' => 'required|string',
-            'payload.order.purchases.*.dimensions.weight.value' => 'required|numeric',
-            'payload.order.purchases.0.dimensions.weight.unit' => 'required|string',
-            'payload.order.purchases.*.quantity' => 'required|numeric',
+            'payload.order.payment_method' =>'required',
+            'payload.details.company_name'=> 'required',
+            'payload.order.purchases.*.dimensions.weight.value' => 'required',
+            'payload.order.purchases.*.dimensions.width.value' => 'required',
+            'payload.order.purchases.*.dimensions.height.value' => 'required',
+            'payload.order.purchases.*.dimensions.length.value' => 'required',
+            'payload.order.purchases.*.dimensions.width.unit' => 'required',
+            'payload.order.purchases.*.dimensions.height.unit' => 'required',
+            'payload.order.purchases.*.dimensions.length.unit' => 'required',
+            'payload.order.purchases.*.dimensions.weight.unit' => 'required',
+            'payload.order.purchases.*.quantity' => 'required',
         ];
     }
 }

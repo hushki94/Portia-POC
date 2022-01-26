@@ -23,6 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/calculate-rate' , [CalculateRateAramex::class , 'store']);
 
-Route::post('/charge-waybill' , [CreateChargeWaybillArmx::class , 'create']);
+Route::post('/charge-waybill' , [CreateChargeWaybillArmx::class , 'store']);
 
 // return Http::dd()->post('https://ws.dev.aramex.net/ShippingAPI.V2/RateCalculator/Service_1_0.svc/json/CalculateRate');

@@ -11,15 +11,16 @@ class CreateChargeWaybillArmx extends Controller
 {
     public function store(AramexRequest $request)
     {
-
-        $query = $request;
         try {
-            GenerateWaybillAndEmail::dispatch($query);
+            GenerateWaybillAndEmail::dispatch($request->all());
+
             return [
                 "Message" => "your order is being processed , you’ll receive an email with the results.",
                 "success" => true,
             ];
+
         } catch (Exception $e) {
+
             return 'Please try again';
         }
     }

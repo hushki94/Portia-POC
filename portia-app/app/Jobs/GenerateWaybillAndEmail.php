@@ -37,7 +37,6 @@ class GenerateWaybillAndEmail implements ShouldQueue
     public function dateFormatter($date)
     {
 
-
         $tz = 2 * 100;
         $tz = $tz > 0 ? '-' . $tz : '+' . $tz;
         return '/Date(' . (\Carbon\Carbon::parse($date)->timestamp) * 1000 . $tz . ')/';
@@ -201,7 +200,7 @@ class GenerateWaybillAndEmail implements ShouldQueue
             ],
         ]);
 
-    
+
 
         $pickupLabel = Http::post('https://ws.dev.aramex.net/ShippingAPI.V2/Shipping/Service_1_0.svc/json/CreatePickup', [
             "ClientInfo" => [
