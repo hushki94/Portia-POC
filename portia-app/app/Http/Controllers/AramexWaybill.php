@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AramexRequest;
-use App\Jobs\GenerateWaybillAndEmail;
+use App\Http\Requests\AramexShipment;
+use App\Jobs\WaybillGenerator;
 use App\Services\AramexDetails;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
-class CreateChargeWaybillArmx extends Controller
+class AramexWaybill extends Controller
 {
-    public function store(AramexRequest $request)
+    public function store(AramexShipment $request)
     {
         try {
-            GenerateWaybillAndEmail::dispatch($request->all());
+            WaybillGenerator::dispatch($request->all());
 
             return [
                 "Message" => "your order is being processed , you’ll receive an email with the results.",
@@ -22,7 +23,10 @@ class CreateChargeWaybillArmx extends Controller
 
         } catch (Exception $e) {
 
-            return 'Please try again';
+            return [
+                "Message" => "Something went error, please try again.",
+                "success" => false,
+            ];
         }
     }
 

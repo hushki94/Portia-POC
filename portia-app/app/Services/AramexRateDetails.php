@@ -1,53 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 
-class CalculateRateAramex extends Controller
+class AramexRateDetails
 {
+   public static function getRateDetails($query){
+        $quantity = 0 ;
+        $weight = 0 ;
+        $unit = '';
 
 
 
-    public function store()
-    {
-         $quantity = 0 ;
-         $weight = 0 ;
-         $unit = '';
-        
-        request()->validate([
-            'payload.checkout.shipping.destination.line1'=>'required',
-            'payload.checkout.shipping.destination.city'=>'required',
-            'payload.checkout.shipping.destination.postcode'=>'required',
-            'payload.checkout.shipping.destination.country'=>'required',
-            'payload.checkout.shipping.destination.lng'=>'required',
-            'payload.checkout.shipping.destination.lat'=>'required',
+       foreach($query['payload']['checkout']['purchases'] as $purchase){
+            $weight += $purchase['dimensions']['weight']['value'];
+            $quantity += $purchase['quantity'];
+            $unit = strToUpper($purchase['dimensions']['weight']['unit']);
+        }
 
-            'payload.checkout.shipping.source.line1'=>'required',
-            'payload.checkout.shipping.source.city'=>'required',
-            'payload.checkout.shipping.source.postcode'=>'required',
-            'payload.checkout.shipping.source.country'=>'required',
-            'payload.checkout.shipping.source.lng'=>'required',
-            'payload.checkout.shipping.source.lat'=>'required',
-
-            'purchases.*.dimensions.weight.unit'=>'required',
-            'purchases.*.dimensions.weight.value'=>'required',
-
-            'purchases.*.quantity'=>'required',
-        ]);
-
-        // dd(request()['name']);
-        $query = request()->all();
-
-        foreach($query['payload']['checkout']['purchases'] as $purchase){
-             $weight += $purchase['dimensions']['weight']['value'];
-             $quantity += $purchase['quantity'];
-             $unit = strToUpper($purchase['dimensions']['weight']['unit']);
-            }
-
-
-
-        $respone = Http::post('https://ws.dev.aramex.net/ShippingAPI.V2/RateCalculator/Service_1_0.svc/json/CalculateRate', [
+        return ([
             "ClientInfo" => [
                 "UserName" => "reem@reem.com",
                 "Password" => "123456789",
@@ -125,11 +96,5 @@ class CalculateRateAramex extends Controller
                 "Reference5" => "",
             ],
         ]);
-
-
-        // $json =  json_encode($json);
-
-        return $respone->json('TotalAmount');
     }
 }
-
